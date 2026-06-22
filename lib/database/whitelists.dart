@@ -71,12 +71,12 @@ extension RawWhitelistExtension on RawWhitelist {
 
 extension WhitelistExtension on Whitelist {
   WhitelistsCompanion toCompanion() {
-    return WhitelistsCompanion(
+    return WhitelistsCompanion.insert(
       id: id == -1 ? const Value.absent() : Value(id),
-      Value(domain),
-      Value(enabled),
-      Value(description),
-      Value(createdAt),
+      domain: domain,
+      enabled: Value(enabled),
+      description: Value(description),
+      createdAt: Value(createdAt),
     );
   }
 }

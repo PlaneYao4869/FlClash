@@ -1,4 +1,5 @@
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/whitelist.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
@@ -161,7 +162,7 @@ class _WhitelistPageState extends ConsumerState<WhitelistPage> {
   }
 
   void _handleSelectAll() {
-    final ids = ref.read(whitelistsProvider).value?.map((item) => item.id).toSet() ?? {};
+    final ids = ref.read(whitelistsProvider).map((item) => item.id).toSet() ?? {};
     ref.read(itemsProvider(_key).notifier).update((selected) {
       return selected.containsAll(ids) ? {} : ids;
     });
@@ -240,7 +241,7 @@ class _WhitelistPageState extends ConsumerState<WhitelistPage> {
 
   @override
   Widget build(BuildContext context) {
-    final whitelists = ref.watch(whitelistsProvider).value ?? [];
+    final whitelists = ref.watch(whitelistsProvider) ?? [];
     final selectedIds = ref.watch(itemsProvider(_key));
     final appLocalizations = context.appLocalizations;
 
