@@ -1087,6 +1087,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "whitelistMode": MessageLookupByLibrary.simpleMessage(
       "Режим белого списка",
     ),
+    "whitelistManagement": MessageLookupByLibrary.simpleMessage(
+      "Управление белым списком",
+    ),
+    "whitelistDesc": MessageLookupByLibrary.simpleMessage(
+      "Управление доменами, обходящими прокси",
+    ),
+    "addWhitelist": MessageLookupByLibrary.simpleMessage(
+      "Добавить в белый список",
+    ),
+    "editWhitelist": MessageLookupByLibrary.simpleMessage(
+      "Редактировать белый список",
+    ),
+    "domain": MessageLookupByLibrary.simpleMessage("Домен"),
+    "descriptionOptional": MessageLookupByLibrary.simpleMessage(
+      "Описание (необязательно)",
+    ),
+    "importCommonWebsites": MessageLookupByLibrary.simpleMessage(
+      "Импорт популярных сайтов",
+    ),
+    "noWhitelistDomains": MessageLookupByLibrary.simpleMessage(
+      "Нет доменов в белом списке",
+    ),
     "yearsAgo": m19,
     "zh_CN": MessageLookupByLibrary.simpleMessage("Упрощенный китайский"),
   };

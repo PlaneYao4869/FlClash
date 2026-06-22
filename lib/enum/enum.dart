@@ -340,6 +340,7 @@ enum PageLabel {
   requests,
   resources,
   connections,
+  whitelist,
 }
 
 enum RuleAction {

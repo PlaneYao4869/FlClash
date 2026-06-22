@@ -4378,6 +4378,81 @@ class AppLocalizations {
   String get suspended {
     return Intl.message('Suspended...', name: 'suspended', desc: '', args: []);
   }
+
+  /// `Whitelist Management`
+  String get whitelistManagement {
+    return Intl.message(
+      'Whitelist Management',
+      name: 'whitelistManagement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage domains that should bypass the proxy`
+  String get whitelistDesc {
+    return Intl.message(
+      'Manage domains that should bypass the proxy',
+      name: 'whitelistDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Whitelist`
+  String get addWhitelist {
+    return Intl.message(
+      'Add Whitelist',
+      name: 'addWhitelist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Whitelist`
+  String get editWhitelist {
+    return Intl.message(
+      'Edit Whitelist',
+      name: 'editWhitelist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Domain`
+  String get domain {
+    return Intl.message('Domain', name: 'domain', desc: '', args: []);
+  }
+
+  /// `Description (optional)`
+  String get descriptionOptional {
+    return Intl.message(
+      'Description (optional)',
+      name: 'descriptionOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import Common Websites`
+  String get importCommonWebsites {
+    return Intl.message(
+      'Import Common Websites',
+      name: 'importCommonWebsites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No whitelist domains`
+  String get noWhitelistDomains {
+    return Intl.message(
+      'No whitelist domains',
+      name: 'noWhitelistDomains',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -72,6 +72,13 @@ class Navigation {
         builder: (_) => const ToolsView(key: GlobalObjectKey(PageLabel.tools)),
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
+      NavigationItem(
+        icon: const Icon(Icons.list_alt),
+        label: PageLabel.whitelist,
+        builder: (_) => const WhitelistPage(key: GlobalObjectKey(PageLabel.whitelist)),
+        description: 'whitelistDesc',
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+      ),
     ];
   }
 
