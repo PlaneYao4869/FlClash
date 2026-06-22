@@ -43,7 +43,7 @@ class _WhitelistPageState extends ConsumerState<WhitelistPage> {
             TextField(
               controller: _domainController,
               decoration: InputDecoration(
-                labelText: appLocalizations.domain,
+                labelText: appLocalizations.domainName,
                 hintText: '例如: baidu.com',
                 border: const OutlineInputBorder(),
               ),

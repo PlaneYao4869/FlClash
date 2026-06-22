@@ -4420,8 +4420,8 @@ class AppLocalizations {
   }
 
   /// `Domain`
-  String get domain {
-    return Intl.message('Domain', name: 'domain', desc: '', args: []);
+  String get domainName {
+    return Intl.message('Domain', name: 'domainName', desc: '', args: []);
   }
 
   /// `Description (optional)`
