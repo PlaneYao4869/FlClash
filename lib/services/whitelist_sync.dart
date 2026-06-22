@@ -1,4 +1,5 @@
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/state.dart';
 import 'package:fl_clash/database/database.dart';
 import 'package:fl_clash/models/clash_config.dart';
 import 'package:fl_clash/models/whitelist.dart';
