@@ -203,9 +203,21 @@ class _DomainWhitelistTabState extends ConsumerState<DomainWhitelistTab> {
                     leading: const Icon(Icons.language),
                     title: Text(item.domain),
                     subtitle: item.description != null ? Text(item.description!) : null,
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => ref.read(whitelistsProvider.notifier).deleteWhitelist(item.id),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Switch(
+                          value: item.enabled,
+                          onChanged: (value) {
+                            ref.read(whitelistsProvider.notifier)
+                                .updateWhitelist(item.copyWith(enabled: value));
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => ref.read(whitelistsProvider.notifier).deleteWhitelist(item.id),
+                        ),
+                      ],
                     ),
                   ),
                 );

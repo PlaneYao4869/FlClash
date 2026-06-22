@@ -24,7 +24,7 @@ class WhitelistRuleSync {
     try {
       final ref = globalState.container;
       _log('Waiting 800ms for Riverpod stream...');
-      await Future.delayed(const Duration(milliseconds: 800));
+      await Future.delayed(const Duration(milliseconds: 200));
       _log('Triggering applyProfile...');
       ref.read(setupActionProvider.notifier).applyProfileDebounce();
       _log('applyProfile triggered');
