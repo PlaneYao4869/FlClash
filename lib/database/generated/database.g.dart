@@ -3391,6 +3391,360 @@ class IconRecordsCompanion extends UpdateCompanion<IconRecord> {
   }
 }
 
+class $WhitelistsTable extends Whitelists
+    with TableInfo<$WhitelistsTable, RawWhitelist> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WhitelistsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _domainMeta = const VerificationMeta('domain');
+  @override
+  late final GeneratedColumn<String> domain = GeneratedColumn<String>(
+    'domain',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _enabledMeta = const VerificationMeta(
+    'enabled',
+  );
+  @override
+  late final GeneratedColumn<bool> enabled = GeneratedColumn<bool>(
+    'enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    domain,
+    enabled,
+    description,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'whitelists';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RawWhitelist> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('domain')) {
+      context.handle(
+        _domainMeta,
+        domain.isAcceptableOrUnknown(data['domain']!, _domainMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_domainMeta);
+    }
+    if (data.containsKey('enabled')) {
+      context.handle(
+        _enabledMeta,
+        enabled.isAcceptableOrUnknown(data['enabled']!, _enabledMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RawWhitelist map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RawWhitelist(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      domain: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}domain'],
+      )!,
+      enabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}enabled'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+    );
+  }
+
+  @override
+  $WhitelistsTable createAlias(String alias) {
+    return $WhitelistsTable(attachedDatabase, alias);
+  }
+}
+
+class RawWhitelist extends DataClass implements Insertable<RawWhitelist> {
+  final int id;
+  final String domain;
+  final bool enabled;
+  final String? description;
+  final DateTime? createdAt;
+  const RawWhitelist({
+    required this.id,
+    required this.domain,
+    required this.enabled,
+    this.description,
+    this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['domain'] = Variable<String>(domain);
+    map['enabled'] = Variable<bool>(enabled);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    return map;
+  }
+
+  WhitelistsCompanion toCompanion(bool nullToAbsent) {
+    return WhitelistsCompanion(
+      id: Value(id),
+      domain: Value(domain),
+      enabled: Value(enabled),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+    );
+  }
+
+  factory RawWhitelist.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RawWhitelist(
+      id: serializer.fromJson<int>(json['id']),
+      domain: serializer.fromJson<String>(json['domain']),
+      enabled: serializer.fromJson<bool>(json['enabled']),
+      description: serializer.fromJson<String?>(json['description']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'domain': serializer.toJson<String>(domain),
+      'enabled': serializer.toJson<bool>(enabled),
+      'description': serializer.toJson<String?>(description),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+    };
+  }
+
+  RawWhitelist copyWith({
+    int? id,
+    String? domain,
+    bool? enabled,
+    Value<String?> description = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+  }) => RawWhitelist(
+    id: id ?? this.id,
+    domain: domain ?? this.domain,
+    enabled: enabled ?? this.enabled,
+    description: description.present ? description.value : this.description,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+  );
+  RawWhitelist copyWithCompanion(WhitelistsCompanion data) {
+    return RawWhitelist(
+      id: data.id.present ? data.id.value : this.id,
+      domain: data.domain.present ? data.domain.value : this.domain,
+      enabled: data.enabled.present ? data.enabled.value : this.enabled,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RawWhitelist(')
+          ..write('id: $id, ')
+          ..write('domain: $domain, ')
+          ..write('enabled: $enabled, ')
+          ..write('description: $description, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, domain, enabled, description, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RawWhitelist &&
+          other.id == this.id &&
+          other.domain == this.domain &&
+          other.enabled == this.enabled &&
+          other.description == this.description &&
+          other.createdAt == this.createdAt);
+}
+
+class WhitelistsCompanion extends UpdateCompanion<RawWhitelist> {
+  final Value<int> id;
+  final Value<String> domain;
+  final Value<bool> enabled;
+  final Value<String?> description;
+  final Value<DateTime?> createdAt;
+  const WhitelistsCompanion({
+    this.id = const Value.absent(),
+    this.domain = const Value.absent(),
+    this.enabled = const Value.absent(),
+    this.description = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  WhitelistsCompanion.insert({
+    this.id = const Value.absent(),
+    required String domain,
+    this.enabled = const Value.absent(),
+    this.description = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : domain = Value(domain);
+  static Insertable<RawWhitelist> custom({
+    Expression<int>? id,
+    Expression<String>? domain,
+    Expression<bool>? enabled,
+    Expression<String>? description,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (domain != null) 'domain': domain,
+      if (enabled != null) 'enabled': enabled,
+      if (description != null) 'description': description,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  WhitelistsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? domain,
+    Value<bool>? enabled,
+    Value<String?>? description,
+    Value<DateTime?>? createdAt,
+  }) {
+    return WhitelistsCompanion(
+      id: id ?? this.id,
+      domain: domain ?? this.domain,
+      enabled: enabled ?? this.enabled,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (domain.present) {
+      map['domain'] = Variable<String>(domain.value);
+    }
+    if (enabled.present) {
+      map['enabled'] = Variable<bool>(enabled.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WhitelistsCompanion(')
+          ..write('id: $id, ')
+          ..write('domain: $domain, ')
+          ..write('enabled: $enabled, ')
+          ..write('description: $description, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
@@ -3402,6 +3756,7 @@ abstract class _$Database extends GeneratedDatabase {
   );
   late final $ProxyGroupsTable proxyGroups = $ProxyGroupsTable(this);
   late final $IconRecordsTable iconRecords = $IconRecordsTable(this);
+  late final $WhitelistsTable whitelists = $WhitelistsTable(this);
   late final Index idxRuleTarget = Index(
     'idx_rule_target',
     'CREATE INDEX idx_rule_target ON rules (rule_target)',
@@ -3418,11 +3773,16 @@ abstract class _$Database extends GeneratedDatabase {
     'last_accessed_url',
     'CREATE INDEX last_accessed_url ON icon_records (last_accessed, url)',
   );
+  late final Index idxWhitelistDomain = Index(
+    'idx_whitelist_domain',
+    'CREATE INDEX idx_whitelist_domain ON whitelists (domain)',
+  );
   late final ProfilesDao profilesDao = ProfilesDao(this as Database);
   late final ScriptsDao scriptsDao = ScriptsDao(this as Database);
   late final RulesDao rulesDao = RulesDao(this as Database);
   late final ProxyGroupsDao proxyGroupsDao = ProxyGroupsDao(this as Database);
   late final IconRecordsDao iconRecordsDao = IconRecordsDao(this as Database);
+  late final WhitelistsDao whitelistsDao = WhitelistsDao(this as Database);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3434,10 +3794,12 @@ abstract class _$Database extends GeneratedDatabase {
     profileRuleLinks,
     proxyGroups,
     iconRecords,
+    whitelists,
     idxRuleTarget,
     idxProfileSceneOrder,
     idxProfileNameOrder,
     lastAccessedUrl,
+    idxWhitelistDomain,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -5765,6 +6127,202 @@ typedef $$IconRecordsTableProcessedTableManager =
       IconRecord,
       PrefetchHooks Function()
     >;
+typedef $$WhitelistsTableCreateCompanionBuilder =
+    WhitelistsCompanion Function({
+      Value<int> id,
+      required String domain,
+      Value<bool> enabled,
+      Value<String?> description,
+      Value<DateTime?> createdAt,
+    });
+typedef $$WhitelistsTableUpdateCompanionBuilder =
+    WhitelistsCompanion Function({
+      Value<int> id,
+      Value<String> domain,
+      Value<bool> enabled,
+      Value<String?> description,
+      Value<DateTime?> createdAt,
+    });
+
+class $$WhitelistsTableFilterComposer
+    extends Composer<_$Database, $WhitelistsTable> {
+  $$WhitelistsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get domain => $composableBuilder(
+    column: $table.domain,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get enabled => $composableBuilder(
+    column: $table.enabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WhitelistsTableOrderingComposer
+    extends Composer<_$Database, $WhitelistsTable> {
+  $$WhitelistsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get domain => $composableBuilder(
+    column: $table.domain,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get enabled => $composableBuilder(
+    column: $table.enabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WhitelistsTableAnnotationComposer
+    extends Composer<_$Database, $WhitelistsTable> {
+  $$WhitelistsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get domain =>
+      $composableBuilder(column: $table.domain, builder: (column) => column);
+
+  GeneratedColumn<bool> get enabled =>
+      $composableBuilder(column: $table.enabled, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$WhitelistsTableTableManager
+    extends
+        RootTableManager<
+          _$Database,
+          $WhitelistsTable,
+          RawWhitelist,
+          $$WhitelistsTableFilterComposer,
+          $$WhitelistsTableOrderingComposer,
+          $$WhitelistsTableAnnotationComposer,
+          $$WhitelistsTableCreateCompanionBuilder,
+          $$WhitelistsTableUpdateCompanionBuilder,
+          (
+            RawWhitelist,
+            BaseReferences<_$Database, $WhitelistsTable, RawWhitelist>,
+          ),
+          RawWhitelist,
+          PrefetchHooks Function()
+        > {
+  $$WhitelistsTableTableManager(_$Database db, $WhitelistsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WhitelistsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WhitelistsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WhitelistsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> domain = const Value.absent(),
+                Value<bool> enabled = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => WhitelistsCompanion(
+                id: id,
+                domain: domain,
+                enabled: enabled,
+                description: description,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String domain,
+                Value<bool> enabled = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => WhitelistsCompanion.insert(
+                id: id,
+                domain: domain,
+                enabled: enabled,
+                description: description,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WhitelistsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$Database,
+      $WhitelistsTable,
+      RawWhitelist,
+      $$WhitelistsTableFilterComposer,
+      $$WhitelistsTableOrderingComposer,
+      $$WhitelistsTableAnnotationComposer,
+      $$WhitelistsTableCreateCompanionBuilder,
+      $$WhitelistsTableUpdateCompanionBuilder,
+      (
+        RawWhitelist,
+        BaseReferences<_$Database, $WhitelistsTable, RawWhitelist>,
+      ),
+      RawWhitelist,
+      PrefetchHooks Function()
+    >;
 
 class $DatabaseManager {
   final _$Database _db;
@@ -5781,6 +6339,8 @@ class $DatabaseManager {
       $$ProxyGroupsTableTableManager(_db, _db.proxyGroups);
   $$IconRecordsTableTableManager get iconRecords =>
       $$IconRecordsTableTableManager(_db, _db.iconRecords);
+  $$WhitelistsTableTableManager get whitelists =>
+      $$WhitelistsTableTableManager(_db, _db.whitelists);
 }
 
 mixin _$ProfilesDaoMixin on DatabaseAccessor<Database> {
@@ -5854,4 +6414,16 @@ class IconRecordsDaoManager {
   IconRecordsDaoManager(this._db);
   $$IconRecordsTableTableManager get iconRecords =>
       $$IconRecordsTableTableManager(_db.attachedDatabase, _db.iconRecords);
+}
+
+mixin _$WhitelistsDaoMixin on DatabaseAccessor<Database> {
+  $WhitelistsTable get whitelists => attachedDatabase.whitelists;
+  WhitelistsDaoManager get managers => WhitelistsDaoManager(this);
+}
+
+class WhitelistsDaoManager {
+  final _$WhitelistsDaoMixin _db;
+  WhitelistsDaoManager(this._db);
+  $$WhitelistsTableTableManager get whitelists =>
+      $$WhitelistsTableTableManager(_db.attachedDatabase, _db.whitelists);
 }
