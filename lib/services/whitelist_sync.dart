@@ -8,7 +8,7 @@ import 'package:fl_clash/state.dart';
 
 class WhitelistRuleSync {
   static final _logFile = File(
-    '${Platform.environment['TEMP'] ?? 'C:\Windows\Temp'}\flclash_whitelist.log',
+    '${Platform.environment['TEMP'] ?? 'C:\\Windows\\Temp'}\\flclash_whitelist.log',
   );
 
   static Future<void> _log(String msg) async {
@@ -20,9 +20,11 @@ class WhitelistRuleSync {
     } catch (_) {}
   }
 
-  static void _triggerReload() {
+  static Future<void> _triggerReload() async {
     try {
       final ref = globalState.container;
+      _log('Waiting 800ms for Riverpod stream...');
+      await Future.delayed(const Duration(milliseconds: 800));
       _log('Triggering applyProfile...');
       ref.read(setupActionProvider.notifier).applyProfileDebounce();
       _log('applyProfile triggered');
@@ -34,7 +36,7 @@ class WhitelistRuleSync {
   static Future<void> syncAll() async {
     _log('========== syncAll start ==========');
 
-    // 1. 查询数据库中的白名单
+    // 1. 查询数据库
     final domains = await database.whitelistsDao.queryAll().get();
     final processes = await database.processWhitelistsDao.queryAll().get();
     _log('DB domains: ${domains.length} (enabled: ${domains.where((d) => d.enabled).length})');
@@ -82,7 +84,7 @@ class WhitelistRuleSync {
 
     _log('Total rules added: $added');
 
-    // 6. 验证规则已写入
+    // 6. 验证
     final verifyRules = await database.rulesDao.queryGlobalAddedRules().get();
     final whitelistRules = verifyRules
         .where((r) =>
@@ -91,13 +93,10 @@ class WhitelistRuleSync {
              r.ruleAction == RuleAction.PROCESS_NAME))
         .toList();
     _log('Verified whitelist rules in DB: ${whitelistRules.length}');
-    for (final r in whitelistRules) {
-      _log('  - ${r.ruleAction.name} ${r.content} -> ${r.ruleTarget}');
-    }
 
-    // 7. 触发重载
+    // 7. 触发重载（带延迟）
     if (added > 0) {
-      _triggerReload();
+      await _triggerReload();
     }
 
     _log('========== syncAll end ==========');
