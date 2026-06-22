@@ -29,8 +29,8 @@ class WhitelistRuleSync {
     _reloadTimer = Timer(const Duration(milliseconds: 50), () {
       try {
         final ref = globalState.container;
-        _log('updateConfigDebounce...');
-        ref.read(setupActionProvider.notifier).updateConfigDebounce();
+        _log('applyProfile(force: true)...');
+        ref.read(setupActionProvider.notifier).applyProfile(force: true)();
       } catch (e) {
         _log('Reload failed: $e');
       }
