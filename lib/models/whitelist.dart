@@ -8,7 +8,7 @@ abstract class Whitelist with _$Whitelist {
   const factory Whitelist({
     @Default(-1) int id,
     required String domain,
-    @Default(false) bool enabled,
+    @Default(true) bool enabled,
     String? description,
     DateTime? createdAt,
   }) = _Whitelist;

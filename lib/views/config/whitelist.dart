@@ -194,7 +194,7 @@ class _DomainWhitelistTabState extends ConsumerState<DomainWhitelistTab> {
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
               itemCount: whitelists.length,
               itemBuilder: (context, index) {
                 final item = whitelists[index];
@@ -356,7 +356,7 @@ class _ProcessWhitelistTabState extends ConsumerState<ProcessWhitelistTab> {
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
               itemCount: processWhitelists.length,
               itemBuilder: (context, index) {
                 final item = processWhitelists[index];
