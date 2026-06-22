@@ -1,16 +1,27 @@
+import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/database/database.dart';
 import 'package:fl_clash/models/clash_config.dart';
 import 'package:fl_clash/models/whitelist.dart';
 import 'package:fl_clash/models/process_whitelist.dart';
 import 'package:fl_clash/enum/enum.dart';
+import 'package:fl_clash/providers/providers.dart';
 
 class WhitelistRuleSync {
+  /// 触发 Clash 配置重载
+  static void _triggerReload() {
+    try {
+      final ref = globalState.container;
+      ref.read(setupActionProvider.notifier).updateConfigDebounce();
+    } catch (e) {
+      print('Failed to trigger config reload: $e');
+    }
+  }
+
   /// 同步域名白名单到 Clash 规则
   static Future<void> syncDomainWhitelist() async {
     final whitelists = await database.whitelistsDao.queryEnabled().get();
     final existingRules = await database.rulesDao.queryGlobalAddedRules().get();
 
-    // 找出旧的白名单规则
     final whitelistRuleIds = existingRules
         .where((rule) =>
             rule.ruleAction == RuleAction.DOMAIN_SUFFIX &&
@@ -40,15 +51,16 @@ class WhitelistRuleSync {
         await database.rulesDao.putGlobalRule(rule);
       }
     }
+
+    _triggerReload();
   }
 
-  /// 同步进程白名单到 Clash 规则（PROCESS-NAME 规则）
+  /// 同步进程白名单到 Clash 规则
   static Future<void> syncProcessWhitelist() async {
     final processWhitelists =
         await database.processWhitelistsDao.queryEnabled().get();
     final existingRules = await database.rulesDao.queryGlobalAddedRules().get();
 
-    // 找出旧的进程白名单规则
     final processRuleIds = existingRules
         .where((rule) =>
             rule.ruleAction == RuleAction.PROCESS_NAME &&
@@ -68,6 +80,8 @@ class WhitelistRuleSync {
       );
       await database.rulesDao.putGlobalRule(rule);
     }
+
+    _triggerReload();
   }
 
   /// 同步所有白名单

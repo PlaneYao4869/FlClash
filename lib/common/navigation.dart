@@ -34,6 +34,13 @@ class Navigation {
             const ProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
       ),
       NavigationItem(
+        icon: const Icon(Icons.list_alt),
+        label: PageLabel.whitelist,
+        builder: (_) => const WhitelistPage(key: GlobalObjectKey(PageLabel.whitelist)),
+        description: 'whitelistDesc',
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+      ),
+      NavigationItem(
         icon: const Icon(Icons.view_timeline),
         label: PageLabel.requests,
         builder: (_) =>
@@ -70,13 +77,6 @@ class Navigation {
         icon: const Icon(Icons.construction),
         label: PageLabel.tools,
         builder: (_) => const ToolsView(key: GlobalObjectKey(PageLabel.tools)),
-        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
-      ),
-      NavigationItem(
-        icon: const Icon(Icons.list_alt),
-        label: PageLabel.whitelist,
-        builder: (_) => const WhitelistPage(key: GlobalObjectKey(PageLabel.whitelist)),
-        description: 'whitelistDesc',
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
     ];

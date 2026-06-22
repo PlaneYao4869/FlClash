@@ -318,7 +318,7 @@ class _ProcessWhitelistTabState extends ConsumerState<ProcessWhitelistTab> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('确认删除'),
-        content: const Text('删除后将移除对应的 Windows 防火墙规则'),
+        content: const Text('删除后该程序将恢复走代理'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
