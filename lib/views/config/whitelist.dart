@@ -242,7 +242,7 @@ class _ProcessWhitelistTabState extends ConsumerState<ProcessWhitelistTab> {
   Future<void> _handleAddProcess() async {
     final appLocalizations = context.appLocalizations;
     
-    final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['exe'],
       dialogTitle: '选择要直连的程序',
