@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 
 object GlobalState : CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
-    const val NOTIFICATION_CHANNEL = "FlClash"
+    const val NOTIFICATION_CHANNEL = "PlaneClash"
 
     const val NOTIFICATION_ID = 1
 

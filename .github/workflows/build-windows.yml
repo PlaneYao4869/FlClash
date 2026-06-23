@@ -28,8 +28,22 @@ jobs:
       - name: Build Windows
         run: flutter build windows --release
       
-      - name: Upload artifact
+      - name: Upload raw artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PlaneClash-Windows
+          name: PlaneClash-Windows-Portable
           path: build/windows/x64/runner/Release/
+      
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup -y
+      
+      - name: Create Installer
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "windows\installer.iss"
+      
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlaneClash-Setup
+          path: installer_output/PlaneClash_Setup.exe

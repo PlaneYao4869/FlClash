@@ -1,14 +1,14 @@
-display_name: FlClash
+display_name: PlaneClash
 
 icon: ./assets/images/icon.png
 
 keywords:
-  - FlClash
+  - PlaneClash
   - Clash
   - ClashMeta
   - Proxy
 
-generic_name: FlClash
+generic_name: PlaneClash
 
 categories:
   - Network
