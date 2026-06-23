@@ -6,6 +6,7 @@ import 'package:fl_clash/models/clash_config.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
+import 'package:fl_clash/common/common.dart';
 
 class WhitelistRuleSync {
   static final _logFile = File(
@@ -77,6 +78,7 @@ class WhitelistRuleSync {
     int added = 0;
     for (final d in enabledDomains) {
       await database.rulesDao.putGlobalRule(Rule(
+        id: snowflake.id,
         ruleAction: RuleAction.DOMAIN_SUFFIX,
         content: d.domain,
         ruleTarget: RuleTarget.DIRECT.name,
@@ -87,6 +89,7 @@ class WhitelistRuleSync {
 
     for (final p in enabledProcesses) {
       await database.rulesDao.putGlobalRule(Rule(
+        id: snowflake.id,
         ruleAction: RuleAction.PROCESS_NAME,
         content: p.processName,
         ruleTarget: RuleTarget.DIRECT.name,
