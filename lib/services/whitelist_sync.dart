@@ -26,7 +26,7 @@ class WhitelistRuleSync {
   /// 轻量重载，50ms 防抖
   static void _scheduleReload() {
     _reloadTimer?.cancel();
-    _reloadTimer = Timer(const Duration(milliseconds: 50), () async {
+    _reloadTimer = Timer(const Duration(milliseconds: 300), () async {
       try {
         final ref = globalState.container;
         _log('applyProfile(force: true)...');
