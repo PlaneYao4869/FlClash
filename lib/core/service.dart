@@ -97,11 +97,7 @@ class CoreService extends CoreHandlerInterface {
       }
     }
     try {
-      _process = await Process.start(
-        appPath.corePath,
-        [_transport.address],
-        mode: ProcessStartMode.hidden,
-      );
+      _process = await Process.start(appPath.corePath, [_transport.address]);
     } catch (e) {
       commonPrint.log(
         'Failed to start core process: $e',
