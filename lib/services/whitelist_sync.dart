@@ -23,21 +23,21 @@ class WhitelistRuleSync {
     } catch (_) {}
   }
 
-  /// 轻量重载，50ms 防抖
+  /// 延迟重载，500ms 防抖
   static void _scheduleReload() {
     _reloadTimer?.cancel();
-    _reloadTimer = Timer(const Duration(milliseconds: 300), () async {
+    _reloadTimer = Timer(const Duration(milliseconds: 500), () async {
       try {
         final ref = globalState.container;
-        _log('applyProfile(force: true)...');
-        ref.read(setupActionProvider.notifier).updateConfigDebounce();
+        _log('Calling applyProfile(force: true)...');
+        await ref.read(setupActionProvider.notifier).applyProfile(force: true);
+        _log('applyProfile done');
       } catch (e) {
         _log('Reload failed: $e');
       }
     });
   }
 
-  /// 增量同步：只处理变化的白名单项
   static Future<void> syncAll() async {
     _log('========== syncAll ==========');
 
@@ -46,70 +46,63 @@ class WhitelistRuleSync {
     final enabledDomains = domains.where((d) => d.enabled).toList();
     final enabledProcesses = processes.where((p) => p.enabled).toList();
 
-    // 构建期望的规则集合
-    final desiredRules = <String, bool>{}; // key: "action:content", enabled
-    for (final d in enabledDomains) {
-      desiredRules['DOMAIN-SUFFIX:${d.domain}'] = true;
-    }
-    for (final p in enabledProcesses) {
-      desiredRules['PROCESS-NAME:${p.processName}'] = true;
-    }
+    _log('Domains: ${domains.length} (${enabledDomains.length} enabled)');
+    _log('Processes: ${processes.length} (${enabledProcesses.length} enabled)');
 
     // 获取现有规则
     final existingRules = await database.rulesDao.queryGlobalAddedRules().get();
-    final existingWhitelistRules = existingRules.where((r) =>
-        (r.ruleAction == RuleAction.DOMAIN_SUFFIX ||
-         r.ruleAction == RuleAction.PROCESS_NAME) &&
-        r.ruleTarget == RuleTarget.DIRECT.name).toList();
 
-    // 构建现有规则集合
-    final existingKeys = <String, int>{}; // key -> ruleId
-    for (final r in existingWhitelistRules) {
-      existingKeys['${r.ruleAction.name}:${r.content}'] = r.id;
+    // 删除旧的白名单规则
+    final oldRuleIds = existingRules
+        .where((r) =>
+            (r.ruleAction == RuleAction.DOMAIN_SUFFIX ||
+             r.ruleAction == RuleAction.PROCESS_NAME) &&
+            r.ruleTarget == RuleTarget.DIRECT.name)
+        .map((r) => r.id)
+        .toList();
+
+    if (oldRuleIds.isNotEmpty) {
+      await database.rulesDao.delRules(oldRuleIds);
+      _log('Deleted ${oldRuleIds.length} old rules');
     }
 
-    // 找出需要删除的（现有但不在期望中）
-    final toDelete = <int>[];
-    for (final entry in existingKeys.entries) {
-      if (!desiredRules.containsKey(entry.key)) {
-        toDelete.add(entry.value);
-      }
-    }
-
-    // 找出需要添加的（期望但不在现有中）
-    final toAdd = <String>[];
-    for (final key in desiredRules.keys) {
-      if (!existingKeys.containsKey(key)) {
-        toAdd.add(key);
-      }
-    }
-
-    // 执行删除
-    if (toDelete.isNotEmpty) {
-      await database.rulesDao.delRules(toDelete);
-      _log('Deleted ${toDelete.length} rules');
-    }
-
-    // 执行添加
-    for (final key in toAdd) {
-      final parts = key.split(':');
-      final action = parts[0] == 'DOMAIN-SUFFIX'
-          ? RuleAction.DOMAIN_SUFFIX
-          : RuleAction.PROCESS_NAME;
-      final content = parts.sublist(1).join(':');
+    // 添加域名白名单规则
+    int added = 0;
+    for (final d in enabledDomains) {
       await database.rulesDao.putGlobalRule(Rule(
-        ruleAction: action,
-        content: content,
+        ruleAction: RuleAction.DOMAIN_SUFFIX,
+        content: d.domain,
         ruleTarget: RuleTarget.DIRECT.name,
       ));
-      _log('Added: $key -> DIRECT');
+      _log('Added domain: ${d.domain} -> DIRECT');
+      added++;
     }
 
-    final changed = toDelete.length + toAdd.length;
-    _log('Changed: $changed rules');
+    // 添加进程白名单规则
+    for (final p in enabledProcesses) {
+      await database.rulesDao.putGlobalRule(Rule(
+        ruleAction: RuleAction.PROCESS_NAME,
+        content: p.processName,
+        ruleTarget: RuleTarget.DIRECT.name,
+      ));
+      _log('Added process: ${p.processName} -> DIRECT');
+      added++;
+    }
 
-    // 只有变化时才触发重载
-    if (changed > 0) {
+    _log('Total added: $added rules');
+
+    // 验证规则已写入
+    final verifyRules = await database.rulesDao.queryGlobalAddedRules().get();
+    final whitelistRules = verifyRules
+        .where((r) =>
+            r.ruleTarget == RuleTarget.DIRECT.name &&
+            (r.ruleAction == RuleAction.DOMAIN_SUFFIX ||
+             r.ruleAction == RuleAction.PROCESS_NAME))
+        .toList();
+    _log('Verified whitelist rules: ${whitelistRules.length}');
+
+    // 触发重载
+    if (added > 0) {
       _scheduleReload();
     }
 
