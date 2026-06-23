@@ -46,6 +46,14 @@ class WhitelistRuleSync {
       await ref.read(setupActionProvider.notifier).applyProfile(force: true);
 
       _log('applyProfile done');
+      
+      // 断开所有连接，迫使浏览器重新建连，新规则立即生效
+      try {
+        await coreController.closeConnections();
+        _log('closeConnections done');
+      } catch (e) {
+        _log('closeConnections failed: $e');
+      }
     } catch (e) {
       _log('Reload failed: $e');
     }
