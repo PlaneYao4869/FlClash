@@ -24,7 +24,7 @@ import 'providers/providers.dart';
 class GlobalState {
   static GlobalState? _instance;
   final navigatorKey = GlobalKey<NavigatorState>();
-  bool isPre = true;
+  bool isPre = false;
   late final String coreSHA256;
   late final PackageInfo packageInfo;
   Function? updateCurrentDelayDebounce;
@@ -49,7 +49,7 @@ class GlobalState {
 
   Future<ProviderContainer> init(int version) async {
     coreSHA256 = const String.fromEnvironment('CORE_SHA256');
-    isPre = const String.fromEnvironment('APP_ENV') != 'stable';
+    isPre = false;
     await _initDynamicColor();
     return _initData(version);
   }
