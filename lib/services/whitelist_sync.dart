@@ -30,7 +30,7 @@ class WhitelistRuleSync {
       try {
         final ref = globalState.container;
         _log('applyProfile(force: true)...');
-        ref.read(setupActionProvider.notifier).applyProfile(force: true)();
+        await ref.read(setupActionProvider.notifier).applyProfile(force: true);
       } catch (e) {
         _log('Reload failed: $e');
       }
