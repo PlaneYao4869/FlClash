@@ -23,12 +23,21 @@ class WhitelistRuleSync {
     } catch (_) {}
   }
 
-  /// 延迟重载，2秒防抖确保 Riverpod 流更新
+  /// 延迟重载
   static void _scheduleReload() {
     _reloadTimer?.cancel();
     _reloadTimer = Timer(const Duration(seconds: 2), () async {
       try {
         final ref = globalState.container;
+        
+        // 先检查 addedRules 是否包含我们的规则
+        final setupState = await ref.read(setupStateProvider(null).future);
+        final addedRules = setupState.addedRules;
+        _log('addedRules count: ${addedRules.length}');
+        for (final r in addedRules) {
+          _log('  - ${r.ruleAction.name} ${r.content} -> ${r.ruleTarget}');
+        }
+        
         _log('Calling applyProfile(force: true)...');
         await ref.read(setupActionProvider.notifier).applyProfile(force: true);
         _log('applyProfile done');
@@ -98,7 +107,7 @@ class WhitelistRuleSync {
         .toList();
     _log('Verified whitelist rules: ${whitelistRules.length}');
 
-    // 延迟重载（2秒，确保 Riverpod 流更新）
+    // 延迟重载
     if (added > 0) {
       _scheduleReload();
     }

@@ -38,8 +38,14 @@ class WhitelistsDao extends DatabaseAccessor<Database>
     return into(whitelists).insert(whitelist.toCompanion());
   }
 
-  Future<bool> updateWhitelist(Whitelist whitelist) {
-    return update(whitelists).replace(whitelist.toCompanion());
+  Future<void> updateWhitelist(Whitelist whitelist) async {
+    await (update(whitelists)..where((t) => t.id.equals(whitelist.id))).write(
+      WhitelistsCompanion(
+        domain: Value(whitelist.domain),
+        enabled: Value(whitelist.enabled),
+        description: Value(whitelist.description),
+      ),
+    );
   }
 
   Future<int> deleteWhitelist(int id) {
