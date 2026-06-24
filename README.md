@@ -5,8 +5,9 @@
 </div>
 
 ## PlaneClash
-本人在flclash开源代码基础上进行了二创，加入了白名单辅助功能（其实就是把原本有的规则功能的一部分提取出来换个实现方式）
+本人在flclash开源代码基础上进行了二创（致歉，若有侵权请致信至planeyao4869@gmail.com），加入了白名单辅助功能（其实就是把原本有的规则功能的一部分提取出来换个实现方式）
 由于太懒了就不写readme了，以下是flclash官方readme
+
 [![Downloads](https://img.shields.io/github/downloads/PlaneYao4869/PlaneClash/total?style=flat-square&logo=github)](https://github.com/PlaneYao4869/PlaneClash/releases/)[![Last Version](https://img.shields.io/github/release/PlaneYao4869/PlaneClash/all.svg?style=flat-square)](https://github.com/PlaneYao4869/PlaneClash/releases/)[![License](https://img.shields.io/github/license/PlaneYao4869/PlaneClash?style=flat-square)](LICENSE)
 
 [![Channel](https://img.shields.io/badge/Telegram-Channel-blue?style=flat-square&logo=telegram)](https://t.me/PlaneClash)
