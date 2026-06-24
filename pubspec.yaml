@@ -1,6 +1,6 @@
 name: fl_clash
-description: PlaneClash - A multi-platform proxy client based on ClashMeta, simple and easy to use, open-source and ad-free.
-homepage: https://github.com/Planeclash/flclash-source
+description: PlaneClash - A multi-platform proxy client based on ClashMeta, simple and easy to use, open-source and ad-free. Includes whitelist management feature.
+homepage: https://github.com/PlaneYao4869/PlaneClash
 publish_to: 'none'
 version: 0.8.93+2026052901
 environment:
