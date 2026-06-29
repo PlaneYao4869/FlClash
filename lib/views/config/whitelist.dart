@@ -80,7 +80,7 @@ class WhitelistScaffold<T> extends StatefulWidget {
   final ValueChanged<String> onSearchChanged;
   final String statisticsText;
   final String emptyMessage;
-  final Widget Function(Set<int> selectedIds) bulkActions;
+  final List<Widget> Function(Set<int> selectedIds) bulkActions;
   final Widget? floatingActionButton;
   final List<Widget> appBarActions;
 
@@ -404,7 +404,7 @@ class _DomainWhitelistTabState extends ConsumerState<DomainWhitelistTab> {
           onPressed: _handleImportCommon,
         ),
       ],
-      bulkActions: (selected) => [
+      bulkActions: (selected) => <Widget>[
         IconButton(
           tooltip: '全部启用',
           icon: const Icon(Icons.toggle_on, color: Colors.green),
@@ -615,7 +615,7 @@ class _ProcessWhitelistTabState extends ConsumerState<ProcessWhitelistTab> {
           '共 ${processWhitelists.length} 个进程，已启用 $enabledCount 个',
       emptyMessage: '暂无进程白名单',
       onSearchChanged: (v) => setState(() => _query = v),
-      bulkActions: (selected) => [
+      bulkActions: (selected) => <Widget>[
         IconButton(
           tooltip: '全部启用',
           icon: const Icon(Icons.toggle_on, color: Colors.green),
