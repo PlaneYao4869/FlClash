@@ -1,0 +1,85 @@
+name: Build Android (Multi-Arch, Debug-Signed)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/build-android-prod.yml'
+      - 'lib/**'
+      - 'android/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.2'
+          channel: 'stable'
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Enable Android
+        run: flutter config --enable-android
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Generate debug keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v \
+            -keystore ~/.android/debug.keystore \
+            -alias androiddebugkey \
+            -storepass android \
+            -keypass android \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Configure signing (debug keystore)
+        run: |
+          cat > android/key.properties <<EOF
+          storeFile=$HOME/.android/debug.keystore
+          storePassword=android
+          keyAlias=androiddebugkey
+          keyPassword=android
+          EOF
+
+      - name: Build multi-arch release APKs (arm, arm64, x64)
+        run: |
+          flutter build apk --release \
+            --target-platform android-arm,android-arm64,android-x64
+
+      - name: Rename APK artifacts
+        run: |
+          mkdir -p out
+          cp build/app/outputs/flutter-apk/app-release.apk out/PlaneClash-Android-APK-MultiArch.apk
+          ls -lh out/
+
+      - name: Upload multi-arch APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlaneClash-Android-APK-MultiArch
+          path: out/PlaneClash-Android-APK-MultiArch.apk
