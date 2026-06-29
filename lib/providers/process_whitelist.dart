@@ -72,6 +72,40 @@ class ProcessWhitelists extends _$ProcessWhitelists {
     }
   }
 
+  Future<void> deleteProcessWhitelists(Set<int> ids) async {
+    final previous = List<ProcessWhitelist>.from(state);
+    state = previous.where((item) => !ids.contains(item.id)).toList();
+    try {
+      for (final id in ids) {
+        await database.processWhitelistsDao.deleteProcessWhitelist(id);
+      }
+      await _syncRules();
+    } catch (e) {
+      state = previous;
+      rethrow;
+    }
+  }
+
+  Future<void> batchUpdateEnabled(Set<int> ids, bool enabled) async {
+    final previous = List<ProcessWhitelist>.from(state);
+    state = [
+      for (final item in previous)
+        if (ids.contains(item.id)) item.copyWith(enabled: enabled) else item
+    ];
+    try {
+      for (final id in ids) {
+        final item = previous.firstWhere((p) => p.id == id);
+        await database.processWhitelistsDao.updateProcessWhitelist(
+          item.copyWith(enabled: enabled),
+        );
+      }
+      await _syncRules();
+    } catch (e) {
+      state = previous;
+      rethrow;
+    }
+  }
+
   Future<void> deleteAll() async {
     final previous = List<ProcessWhitelist>.from(state);
     state = [];

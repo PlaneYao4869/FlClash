@@ -59,13 +59,33 @@ class Whitelists extends _$Whitelists {
     final previous = List<Whitelist>.from(state);
     final index = previous.indexWhere((item) => item.id == whitelist.id);
     if (index == -1) return;
-    
+
     final newList = List<Whitelist>.from(previous);
     newList[index] = whitelist;
     state = newList;
-    
+
     try {
       await database.whitelistsDao.updateWhitelist(whitelist);
+      await _syncRules();
+    } catch (e) {
+      state = previous;
+      rethrow;
+    }
+  }
+
+  Future<void> batchUpdateEnabled(Set<int> ids, bool enabled) async {
+    final previous = List<Whitelist>.from(state);
+    state = [
+      for (final item in previous)
+        if (ids.contains(item.id)) item.copyWith(enabled: enabled) else item
+    ];
+    try {
+      for (final id in ids) {
+        final item = previous.firstWhere((p) => p.id == id);
+        await database.whitelistsDao.updateWhitelist(
+          item.copyWith(enabled: enabled),
+        );
+      }
       await _syncRules();
     } catch (e) {
       state = previous;

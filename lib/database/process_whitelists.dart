@@ -48,6 +48,10 @@ class ProcessWhitelistsDao extends DatabaseAccessor<Database>
     return (delete(processWhitelists)..where((t) => t.id.equals(id))).go();
   }
 
+  Future<int> deleteProcessWhitelists(Set<int> ids) {
+    return (delete(processWhitelists)..where((t) => ids.contains(t.id))).go();
+  }
+
   Future<int> deleteAll() {
     return delete(processWhitelists).go();
   }
